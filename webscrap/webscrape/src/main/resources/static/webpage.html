@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Website Scraper</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f2f2f2;
+        }
+        
+        h1 {
+            color: #333;
+        }
+        
+        form {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            font-weight: bold;
+        }
+        
+        input[type="text"] {
+            padding: 8px;
+            width: 300px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        
+        button[type="submit"] {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        h2 {
+            color: #333;
+        }
+        
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        li {
+            background-color: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        a {
+            text-decoration: none;
+            color: #4CAF50;
+        }
+        
+        div {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Website Scraper</h1>
+
+    <form id="urlForm">
+        <label for="urlInput">Enter URL:</label>
+        <input type="text" id="urlInput" name="url" required>
+        <button type="submit">Scrape</button>
+    </form>
+
+    <h2>Scraped Websites:</h2>
+    <ul id="websiteList"></ul>
+
+    <script>
+        // JavaScript code to handle form submission and display scraped websites
+        document.getElementById("urlForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent default form submission behavior
+            
+            const url = document.getElementById("urlInput").value;
+            
+            // Send an API request to scrape the website
+            fetch("http://localhost:8080/kaboom/scrap", { // Replace with your API endpoint URL
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ url })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the scraped website details
+                const websiteItem = document.createElement("li");
+                websiteItem.innerHTML = `
+                    <a href="${data.url}" target="_blank">${data.title}</a>
+                    <div>Time: ${data.time}</div>
+                    <!-- Add more details here if needed -->
+                `;
+                document.getElementById("websiteList").appendChild(websiteItem);
+            })
+            .catch(error => console.error(error));
+        });
+    </script>
+</body>
+</html>
